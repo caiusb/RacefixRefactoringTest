@@ -1,5 +1,10 @@
 package racefix.refactoring;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,11 +31,11 @@ import org.junit.Rule;
 import org.junit.rules.TestName;
 
 public class BasicTest {
-  
+
   @Rule
   public TestName testName = new TestName();
 
-  //@Before
+  @Before
   public void setUp() {
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IProject project = root.getProject("Dummy");
@@ -42,42 +47,61 @@ public class BasicTest {
       description = project.getDescription();
       description.setNatureIds(new String[] { JavaCore.NATURE_ID });
       project.setDescription(description, null);
-      
+
       IJavaProject javaProject = JavaCore.create(project);
-      
-      IFolder binFolder = project.getFolder("bin"); // it does not need creating...
+
+      IFolder binFolder = project.getFolder("bin"); // it does not need
+                                                    // creating...
       javaProject.setOutputLocation(binFolder.getFullPath(), null);
-      
+
       List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>();
       IVMInstall vmInstall = JavaRuntime.getDefaultVMInstall();
       LibraryLocation[] locations = JavaRuntime.getLibraryLocations(vmInstall);
       for (LibraryLocation element : locations) {
-       entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
+        entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
       }
-      
+
       IFolder sourceFolder = project.getFolder("src");
       sourceFolder.create(false, true, null);
       IFolder packageRootFolder = sourceFolder.getFolder("dummy");
       packageRootFolder.create(false, true, null);
-      
+
       IPackageFragmentRoot rootPackage = javaProject.getPackageFragmentRoot(packageRootFolder);
-      
+
       IPackageFragment pack = rootPackage.createPackageFragment("", true, null);
-      
-      ICompilationUnit cu = pack.createCompilationUnit("Dummy.java", "package dummy;\n\npublic class Dummy{\n\tprivate String x;\n}\n", true, null);
-      
+
+      String filePath = "dummies/" + testName.getMethodName() + ".java";
+      String fileData = getFileContents(filePath);
+
+      ICompilationUnit cu = pack.createCompilationUnit("Dummy.java", fileData, true, null);
+
       IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
       IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
       System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
       newEntries[oldEntries.length] = JavaCore.newSourceEntry(sourceFolder.getFullPath());
-      
+
       project.build(IncrementalProjectBuilder.FULL_BUILD, null);
-      
+
     } catch (Throwable e) {
     }
 
   }
-  
+
+  private String getFileContents(String filePath) throws FileNotFoundException, IOException {
+    String fileData = "";
+    File f = new File(filePath);
+    BufferedReader reader = new BufferedReader(new FileReader(f));
+    char[] buf = new char[1024];
+    int numRead = 0;
+    while ((numRead = reader.read(buf)) != -1) {
+      String readData = String.valueOf(buf, 0, numRead);
+      fileData += readData;
+      buf = new char[1024];
+    }
+    reader.close();
+    return fileData;
+  }
+
   @After
   public void tearDown() {
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
@@ -85,11 +109,9 @@ public class BasicTest {
     try {
       project.delete(true, null);
     } catch (CoreException e) {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
     }
   }
-  
+
   public String decorateName(String name) {
     return "src." + name;
   }
