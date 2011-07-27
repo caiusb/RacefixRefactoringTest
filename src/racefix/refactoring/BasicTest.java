@@ -11,21 +11,23 @@ import java.util.List;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.LibraryLocation;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
@@ -34,6 +36,7 @@ public class BasicTest {
 
   @Rule
   public TestName testName = new TestName();
+  private IPath cuPath;
 
   @Before
   public void setUp() {
@@ -74,7 +77,9 @@ public class BasicTest {
       String fileData = getFileContents(filePath);
 
       ICompilationUnit cu = pack.createCompilationUnit("Dummy.java", fileData, true, null);
-
+      
+      cuPath = cu.getPath();
+      
       IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
       IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
       System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
@@ -88,8 +93,12 @@ public class BasicTest {
   }
 
   private String getFileContents(String filePath) throws FileNotFoundException, IOException {
-    String fileData = "";
     File f = new File(filePath);
+    return getFileContents(f);
+  }
+
+  private String getFileContents(File f) throws FileNotFoundException, IOException {
+    String fileData = "";
     BufferedReader reader = new BufferedReader(new FileReader(f));
     char[] buf = new char[1024];
     int numRead = 0;
@@ -114,5 +123,12 @@ public class BasicTest {
 
   public String decorateName(String name) {
     return "src." + name;
+  }
+
+  protected void assertFinalAs(String expectedFile) throws FileNotFoundException, IOException, JavaModelException {
+    String expected = getFileContents("dummies/" + expectedFile);
+    String filePath = cuPath.toOSString();
+    String actual = getFileContents("../../junit-workspace/" + filePath);
+    Assert.assertEquals(expected, actual);
   }
 }
