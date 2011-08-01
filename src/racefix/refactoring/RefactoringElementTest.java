@@ -6,7 +6,8 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import edu.uiuc.threadlocalrefactoring.ThreadLocalRefactoring;
+import edu.uiuc.threadprivaterefactoring.ThreadPrivateRefactoring;
+
 
 public class RefactoringElementTest extends BasicTest {
 
@@ -36,8 +37,9 @@ public class RefactoringElementTest extends BasicTest {
   @Test
   public void testThreadLocalTransformation() throws Exception {
     RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.x"),
-        new ThreadLocalRefactoring(RefactoringElement.findField(decorateName("dummy.Dummy.x"))));
+        new ThreadPrivateRefactoring(RefactoringElement.findField(decorateName("dummy.Dummy.x"))));
     element.apply();
+    System.out.println(Thread.currentThread().getId());
     assertFinalAs("testThreadLocalTransformation_final.java");
   }
 }
