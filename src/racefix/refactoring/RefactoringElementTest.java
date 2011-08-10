@@ -33,6 +33,12 @@ public class RefactoringElementTest extends BasicTest {
     RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.Inner.x"), null);
     assertNotNull(element.getField());
   }
+  
+  @Test
+  public void testFoundInAnnonymousInnerClass() {
+  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.Particle.coordX"), null);
+    assertNotNull(element.getField());
+  }
 
   @Test
   public void testThreadLocalTransformation() throws Exception {
@@ -41,5 +47,17 @@ public class RefactoringElementTest extends BasicTest {
     element.apply();
     System.out.println(Thread.currentThread().getId());
     assertFinalAs("testThreadLocalTransformation_final.java");
+  }
+  
+  @Test
+  public void testFindLocalVariable() throws Exception {
+  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.m().x"), null);
+    assertNotNull(element.getField());
+  }
+  
+  @Test
+  public void testDubiousRefactoring() throws Exception {
+  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.shared"), null);
+  	assertNotNull(element.getField());
   }
 }

@@ -1,5 +1,7 @@
 package dummy;
 
+import privatization.ThreadPrivate;
+
 public class Dummy {
 
 	private ThreadPrivate<Integer> x = new ThreadPrivate<Integer>();

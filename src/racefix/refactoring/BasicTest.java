@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -84,7 +85,7 @@ public class BasicTest {
       IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
       System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
       newEntries[oldEntries.length] = JavaCore.newSourceEntry(sourceFolder.getFullPath());
-
+      
       project.build(IncrementalProjectBuilder.FULL_BUILD, null);
 
     } catch (Throwable e) {
@@ -111,7 +112,7 @@ public class BasicTest {
     return fileData;
   }
 
-  @After
+//  @After
   public void tearDown() {
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IProject project = root.getProject("Dummy");
