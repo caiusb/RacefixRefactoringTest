@@ -1,8 +1,10 @@
 package dummy;
 
+import privatization.ThreadPrivate;
+
 public class Dummy {
 
-	private ThreadLocal<Integer> x = new ThreadLocal<Integer>();
+	private ThreadPrivate<Integer> x = new ThreadPrivate<Integer>();
 	
 	public void aMethod() {
 		x.set(3);
