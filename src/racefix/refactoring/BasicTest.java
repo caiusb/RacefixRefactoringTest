@@ -112,7 +112,7 @@ public class BasicTest {
     return fileData;
   }
 
-//  @After
+  @After
   public void tearDown() {
     IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
     IProject project = root.getProject("Dummy");
