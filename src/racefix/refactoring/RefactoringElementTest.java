@@ -50,12 +50,6 @@ public class RefactoringElementTest extends BasicTest {
   }
   
   @Test
-  public void testFindLocalVariable() throws Exception {
-  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.m().x"), null);
-    assertNotNull(element.getField());
-  }
-  
-  @Test
   public void testDubiousRefactoring() throws Exception {
   	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.shared"), null);
   	assertNotNull(element.getField());
