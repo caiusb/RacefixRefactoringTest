@@ -13,7 +13,7 @@ public class MakePrivatizableRefactoringTest extends BasicTest {
 	}
 	
 	@Test
-	public void testSimpleChange() {
+	public void testInterfaceImplementsInclusion() {
 		
 	}
 
