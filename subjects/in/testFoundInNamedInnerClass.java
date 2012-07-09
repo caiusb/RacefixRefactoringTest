@@ -1,6 +1,6 @@
-package dummy;
+package in;
 
-public class Dummy {
+public class testFoundInNamedInnerClass {
 	public static class Inner {
 		private String x;
 	}

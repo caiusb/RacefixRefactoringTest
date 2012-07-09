@@ -18,40 +18,40 @@ public class RefactoringElementTest extends BasicTest {
 
   @Test
   public void testFound() {
-    RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.x"), null);
+    RefactoringElement element = new RefactoringElement(decorateName("x"), null);
     assertNotNull(element.getField());
   }
 
   @Test
   public void testNotFound() {
-    RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.notExistent"), null);
+    RefactoringElement element = new RefactoringElement(decorateName("notExistent"), null);
     assertNull(element.getField());
   }
 
   @Test
   public void testFoundInNamedInnerClass() {
-    RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.Inner.x"), null);
+    RefactoringElement element = new RefactoringElement(decorateName("Inner.x"), null);
     assertNotNull(element.getField());
   }
   
   @Test
   public void testFoundInAnnonymousInnerClass() {
-  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.Particle.coordX"), null);
+  	RefactoringElement element = new RefactoringElement(decorateName("Particle.coordX"), null);
     assertNotNull(element.getField());
   }
 
   @Test
   public void testThreadLocalTransformation() throws Exception {
-    RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.x"),
-        new ThreadPrivateRefactoring(RefactoringElement.findField(decorateName("dummy.Dummy.x"))));
+    RefactoringElement element = new RefactoringElement(decorateName("x"),
+        new ThreadPrivateRefactoring(RefactoringElement.findField(decorateName("x"))));
     element.apply();
     System.out.println(Thread.currentThread().getId());
-    assertFinalAs("testThreadLocalTransformation_final.java");
+    assertFinalAs();
   }
   
   @Test
   public void testDubiousRefactoring() throws Exception {
-  	RefactoringElement element = new RefactoringElement(decorateName("dummy.Dummy.shared"), null);
+  	RefactoringElement element = new RefactoringElement(decorateName("shared"), null);
   	assertNotNull(element.getField());
   }
 }

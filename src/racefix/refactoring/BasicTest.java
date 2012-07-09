@@ -65,16 +65,16 @@ public class BasicTest {
         entries.add(JavaCore.newLibraryEntry(element.getSystemLibraryPath(), null, null));
       }
 
-      IFolder sourceFolder = project.getFolder("src");
+      IFolder sourceFolder = project.getFolder("subjects");
       sourceFolder.create(false, true, null);
-      IFolder packageRootFolder = sourceFolder.getFolder("dummy");
+      IFolder packageRootFolder = sourceFolder.getFolder("in");
       packageRootFolder.create(false, true, null);
 
       IPackageFragmentRoot rootPackage = javaProject.getPackageFragmentRoot(packageRootFolder);
 
       IPackageFragment pack = rootPackage.createPackageFragment("", true, null);
 
-      String filePath = "dummies/" + testName.getMethodName() + ".java";
+      String filePath = "subjects/in/" + testName.getMethodName() + ".java";
       String fileData = getFileContents(filePath);
 
       ICompilationUnit cu = pack.createCompilationUnit("Dummy.java", fileData, true, null);
@@ -123,13 +123,20 @@ public class BasicTest {
   }
 
   public String decorateName(String name) {
-    return "src." + name;
+    return "subjects.in." +  testName.getMethodName() + "." + name;
   }
 
-  protected void assertFinalAs(String expectedFile) throws FileNotFoundException, IOException, JavaModelException {
-    String expected = getFileContents("dummies/" + expectedFile);
+  protected void assertFinalAs() throws FileNotFoundException, IOException, JavaModelException {
+    String expected = getFileContents("subjects/out/" + testName.getMethodName() + ".java");
     String filePath = cuPath.toOSString();
     String actual = getFileContents("../../junit-workspace/" + filePath);
+    expected = trimFirstLine(expected);
+    actual = trimFirstLine(actual);
     Assert.assertEquals(expected, actual);
+  }
+  
+  private String trimFirstLine(String contents) {
+	  int firstNewLine = contents.indexOf("\n");
+	  return contents.substring(firstNewLine +1 );
   }
 }
