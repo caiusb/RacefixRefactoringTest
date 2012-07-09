@@ -14,7 +14,6 @@ public class MakePrivatizableRefactoringTest extends BasicTest {
 	
 	@Test
 	public void testInterfaceImplementsInclusion() {
-		
 	}
 
 }
