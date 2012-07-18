@@ -2,6 +2,7 @@ package racefix.refactoring.makeprivatizable;
 
 import java.util.HashSet;
 
+import org.eclipse.jdt.core.IType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -25,7 +26,9 @@ public class MakePrivatizableRefactoringTest extends BasicTest {
 		
 		RefactoringElement element = new RefactoringElement(
 				decorateName("in.testInterfaceImplementsInclusion"),
-				new MakePrivatizableRefactoring(change));
+				new MakePrivatizableRefactoring(
+						(IType) RefactoringElement.findElement(change.clazz,
+								RefactoringElement.CLASS)));
 		element.apply();
 		assertFinalAs();
 	}
