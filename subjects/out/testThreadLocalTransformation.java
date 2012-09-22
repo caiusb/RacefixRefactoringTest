@@ -1,8 +1,8 @@
-package dummy;
+package out;
 
 import privatization.ThreadPrivate;
 
-public class Dummy {
+public class testThreadLocalTransformation {
 
 	private ThreadPrivate<Integer> x = new ThreadPrivate<Integer>();
 	
